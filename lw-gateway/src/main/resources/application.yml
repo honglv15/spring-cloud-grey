@@ -1,0 +1,55 @@
+server:
+  port: 10010
+logging:
+  level:
+    cn.itcast: debug
+  pattern:
+    dateformat: MM-dd HH:mm:ss:SSS
+spring:
+  application:
+    name: gateway
+  boot:
+    admin:
+      client:
+        enabled: true
+        # spring-boot-admin 服务端地址
+        url: http://localhost:8090
+  cloud:
+    gateway:
+      routes:
+        - id: example_route
+          uri: lb://service
+          predicates:
+            - Path=/**
+          order: 10000
+
+        - id: cookie_route
+          uri: lb://service1
+          predicates:
+          - Cookie=userName, 123
+          order: 0
+    discovery:
+      client:
+        simple:
+          instances:
+            service:
+              - uri: http://localhost:8081
+              - uri: http://localhost:8081
+            service1:
+              - uri: http://localhost:8084
+              - uri: http://localhost:8083
+              - uri: http://localhost:8082
+              - uri: http://localhost:8081
+
+
+management:
+  endpoint:
+    gateway:
+      enabled: true
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
