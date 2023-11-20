@@ -1,7 +1,9 @@
-package org.lw;
+package org.lw.filter;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.cloud.gateway.route.Route;
@@ -10,14 +12,14 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import java.net.URI;
-import java.util.Collections;
-import java.util.Set;
+import java.util.*;
 
 import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.*;
 
 @Component
 public class LoggingFilter implements GlobalFilter {
     Log log = LogFactory.getLog(getClass());
+
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
@@ -28,4 +30,7 @@ public class LoggingFilter implements GlobalFilter {
         log.info("Incoming request " + originalUri + " is routed to id: " + route.getId() + " uri:" + routeUri);
         return chain.filter(exchange);
     }
+
+
+
 }

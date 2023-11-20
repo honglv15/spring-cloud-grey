@@ -2,12 +2,22 @@ server:
   port: 10010
 logging:
   level:
-    cn.itcast: debug
+    org.lw: debug
   pattern:
     dateformat: MM-dd HH:mm:ss:SSS
 spring:
+  redis:
+    host: 192.168.122.129
+    port: 6379
+    database: 0
+    timeout: 5000ms
   application:
     name: gateway
+  datasource:
+    url: jdbc:postgresql://192.168.122.129:5432/dhongli
+    driverClassName: org.postgresql.Driver
+    username: dhongli
+    password: 7355608
   boot:
     admin:
       client:
@@ -15,32 +25,14 @@ spring:
         # spring-boot-admin 服务端地址
         url: http://localhost:8090
   cloud:
+    loadbalancer:
+      ribbon:
+        enabled: false
     gateway:
-      routes:
-        - id: example_route
-          uri: lb://service
-          predicates:
-            - Path=/**
-          order: 10000
-
-        - id: cookie_route
-          uri: lb://service1
-          predicates:
-          - Cookie=userName, 123
-          order: 0
-    discovery:
-      client:
-        simple:
-          instances:
-            service:
-              - uri: http://localhost:8081
-              - uri: http://localhost:8081
-            service1:
-              - uri: http://localhost:8084
-              - uri: http://localhost:8083
-              - uri: http://localhost:8082
-              - uri: http://localhost:8081
-
+      redis-route-definition-repository:
+        enabled: true
+    nacos:
+      server-addr: 192.168.122.129:8848
 
 management:
   endpoint:
@@ -52,4 +44,7 @@ management:
     web:
       exposure:
         include: '*'
+
+
+
 
